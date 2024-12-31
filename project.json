@@ -60,10 +60,6 @@
       "options": {
         "passWithNoTests": true
       }
-    },
-    "docker-build": {
-      "dependsOn": ["build"],
-      "command": "docker build -f Dockerfile . -t backend-wallet"
     }
   }
 }
