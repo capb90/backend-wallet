@@ -9,8 +9,11 @@
   },
   "private": true,
   "dependencies": {
+    "@prisma/client": "^6.1.0",
     "axios": "^1.6.0",
-    "express": "~4.18.1"
+    "dotenv": "^16.4.7",
+    "env-var": "^7.5.0",
+    "express": "^4.21.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",
@@ -34,6 +37,7 @@
     "jest-environment-node": "^29.7.0",
     "nx": "20.3.0",
     "prettier": "^2.6.2",
+    "prisma": "^6.1.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
