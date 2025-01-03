@@ -1,4 +1,5 @@
 import { AuthType, NotificationStatus, UserStatus } from "enums"
+import { Report } from "report"
 
 model User {
   id             Int        @id @unique @default(autoincrement())
@@ -10,8 +11,9 @@ model User {
   authProviderId String?    @map("auth_provider_id")
   status         UserStatus @default(ACTIVE)
   lastLogin      DateTime?  @map("last_login") @db.Timestamp()
-  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt      DateTime?  @map("updated_at") @db.Timestamp()
+  reports        Report[]
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
   @@map("user")
 }

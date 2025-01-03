@@ -1,24 +1,29 @@
 import { AttachmentEntity, ReportStatus } from "enums"
+import { User } from "user"
 
 model Report {
-    id         Int          @id @unique @default(autoincrement())
-    name       String       @db.VarChar(256)
-    startDate  DateTime     @default(now()) @db.Date
-    finishDate DateTime?    @db.Date
-    status     ReportStatus @default(CREATED)
-    userId     Int          @map("user_id")
-    updateById Int?
-    createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt  DateTime?    @map("updated_at") @db.Timestamp()
-
-    @@unique([name, userId, startDate, finishDate])
-    @@map("report")
+  id         Int          @id @unique @default(autoincrement())
+  name       String       @db.VarChar(256)
+  startDate  DateTime     @default(now()) @db.Date
+  finishDate DateTime?    @db.Date
+  status     ReportStatus @default(CREATED)
+  userId     Int          @map("user_id")
+  updateById Int?
+  createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt  DateTime?    @map("updated_at") @db.Timestamp() @updatedAt
+  
+  User       User         @relation(fields: [userId], references: [id])
+  
+  @@unique([name, userId, startDate, finishDate])
+  @@map("report")
 }
+
 
 model Category {
     id        Int      @id @unique @default(autoincrement())
     name      String   @db.VarChar(256)
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamp()
+    updatedAt  DateTime?    @map("updated_at") @db.Timestamp() @updatedAt
 
     @@map("category")
 }
@@ -38,7 +43,7 @@ model SharedReport {
     reportId     Int       @map("report_id")
     permissionId Int       @map("permission_id")
     createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt    DateTime? @map("updated_at") @db.Timestamp()
+    updatedAt    DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
     @@unique([userId, reportId])
     @@index([userId])
@@ -49,6 +54,7 @@ model PermissionReport {
     id        Int      @id @unique @default(autoincrement())
     name      String   @unique @db.VarChar(256)
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamp()
+    updatedAt    DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
     @@map("permission_report")
 }
@@ -62,7 +68,7 @@ model Expense {
     active      Boolean   @default(true)
     amount      Decimal   @db.Decimal(15, 2)
     createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt   DateTime? @map("updated_at") @db.Timestamp()
+    updatedAt   DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
     @@unique([name, userId])
     @@map("expense")
@@ -76,7 +82,7 @@ model Income {
     userId      Int       @map("user_id")
     active      Boolean   @default(true)
     createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt   DateTime? @map("updated_at") @db.Timestamp()
+    updatedAt   DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
     @@unique([name, userId])
     @@map("income")
@@ -92,7 +98,7 @@ model ReportExpense {
     active          Boolean   @default(true)
     updateById      Int?
     createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt       DateTime? @map("updated_at") @db.Timestamp()
+    updatedAt       DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
     @@index([reportId, reportedDate])
     @@map("report_expense")
@@ -114,7 +120,7 @@ model ReportExpenseComment {
     userId          Int       @map("user_id")
     parentCommentId Int?      @map("parent_comment_id")
     createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt       DateTime? @map("updated_at") @db.Timestamp()
+    updatedAt       DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
     @@index([reportExpenseId, parentCommentId])
     @@map("report_expense_comment")
@@ -144,7 +150,7 @@ model ReportIncome {
     active         Boolean   @default(true)
     updateById     Int?
     createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt      DateTime? @map("updated_at") @db.Timestamp()
+    updatedAt      DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
     @@index([reportId, reportedDate])
     @@map("report_income")
@@ -157,7 +163,7 @@ model ReportIncomeComment {
     userId          Int       @map("user_id")
     parentCommentId Int?      @map("parent_comment_id")
     createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt       DateTime? @map("updated_at") @db.Timestamp()
+    updatedAt       DateTime? @map("updated_at") @db.Timestamp() @updatedAt
 
     @@index([reportIncomeId, parentCommentId])
     @@map("report_income_comment")
