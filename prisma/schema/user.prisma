@@ -1,0 +1,27 @@
+import { AuthType, NotificationStatus, UserStatus } from "enums"
+
+model User {
+  id             Int        @id @unique @default(autoincrement())
+  fullName       String     @map("full_name") @db.VarChar(256)
+  email          String     @unique
+  verifyEmail    Boolean    @default(false) @map("verify_email")
+  password       String?
+  authProvider   AuthType   @default(LOCAL) @map("auth_provider")
+  authProviderId String?    @map("auth_provider_id")
+  status         UserStatus @default(ACTIVE)
+  lastLogin      DateTime?  @map("last_login") @db.Timestamp()
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime?  @map("updated_at") @db.Timestamp()
+
+  @@map("user")
+}
+
+model Notification {
+  id        Int                @id @unique @default(autoincrement())
+  message   String
+  userId    Int                @map("user_id")
+  status    NotificationStatus @default(SENT)
+  createdAt DateTime           @default(now()) @map("created_at") @db.Timestamp()
+
+  @@map("notification")
+}
