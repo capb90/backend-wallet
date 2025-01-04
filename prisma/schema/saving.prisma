@@ -1,16 +1,21 @@
-model Saving {
-    id        Int       @id @unique @default(autoincrement())
-    name      String    @db.VarChar(256)
-    userId    Int       @map("user_id")
-    goal      Decimal?  @db.Decimal(15, 2)
-    amount    Decimal   @db.Decimal(15, 2)
-    active    Boolean   @default(true)
-    createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt DateTime? @map("updated_at") @db.Timestamp()
+import { User } from "user"
 
-    @@index([userId])
-    @@map("saving")
+model Saving {
+  id        Int             @id @unique @default(autoincrement())
+  name      String          @db.VarChar(256)
+  userId    Int             @map("user_id")
+  goal      Decimal?        @db.Decimal(15, 2)
+  amount    Decimal         @db.Decimal(15, 2)
+  active    Boolean         @default(true)
+  histories HistorySaving[]
+  createdAt DateTime        @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt DateTime?       @map("updated_at") @db.Timestamp()
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("saving")
 }
+
 
 model HistorySaving {
     id        Int       @id @unique @default(autoincrement())
@@ -18,6 +23,7 @@ model HistorySaving {
     amount    Decimal   @db.Decimal(15, 2)
     createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
     updatedAt DateTime? @map("updated_at") @db.Timestamp()
+    saving    Saving    @relation(fields: [savingId], references: [id], onDelete: Cascade)
 
     @@map("history_saving")
 }
