@@ -2,47 +2,52 @@ import { LoanStatus, TypePayment } from "enums"
 import { User } from "user"
 
 model Loan {
-  id               Int                  @id @unique @default(autoincrement())
-  name             String               @db.VarChar(256)
-  userId           Int                  @map("user_id")
-  amount           Decimal              @db.Decimal(15, 2)
-  interestRate     Decimal              @map("interest_rate") @db.Decimal(5, 2)
-  termMonths       Int                  @map("term_months")
-  startDate        DateTime             @map("start_date") @db.Date
-  status           LoanStatus           @default(ACTIVE)
-  remainingBalance Decimal              @map("remaining_balance") @db.Decimal(15, 2)
-  monthlyPayments  MonthlyPaymentLoan[]
-  extraPayments    ExtraPaymentLoan[]
-  createdAt        DateTime             @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt        DateTime?            @map("updated_at") @db.Timestamp()
-  user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id               Int        @id @unique @default(autoincrement())
+  name             String     @db.VarChar(256)
+  userId           Int        @map("user_id")
+  amount           Decimal    @db.Decimal(15, 2)
+  interestRate     Decimal    @map("interest_rate") @db.Decimal(5, 2)
+  termMonths       Int        @map("term_months")
+  startDate        DateTime   @map("start_date") @db.Date
+  status           LoanStatus @default(ACTIVE)
+  remainingBalance Decimal    @map("remaining_balance") @db.Decimal(15, 2)
+  createdAt        DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt        DateTime?  @map("updated_at") @db.Timestamp()
+
+  //Prisma Client
+  monthlyPayments MonthlyPaymentLoan[]
+  extraPayments   ExtraPaymentLoan[]
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("loan")
 }
 
-
 model ExtraPaymentLoan {
-    id          Int         @id @unique @default(autoincrement())
-    loanId      Int         @map("loan_id")
-    paymentDate DateTime    @default(now()) @map("payment_date") @db.Timestamp()
-    amount      Decimal     @db.Decimal(15, 2)
-    paymentType TypePayment @map("payment_type")
-    createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt   DateTime?   @map("updated_at") @db.Timestamp()
-    loan        Loan        @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  id          Int         @id @unique @default(autoincrement())
+  loanId      Int         @map("loan_id")
+  paymentDate DateTime    @default(now()) @map("payment_date") @db.Timestamp()
+  amount      Decimal     @db.Decimal(15, 2)
+  paymentType TypePayment @map("payment_type")
+  createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt   DateTime?   @map("updated_at") @db.Timestamp()
 
-    @@map("extra_payment_loan")
+  //Prisma Client
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  @@map("extra_payment_loan")
 }
 
 model MonthlyPaymentLoan {
-    id          Int       @id @unique @default(autoincrement())
-    loanId      Int       @map("loan_id")
-    paymentDate DateTime  @default(now()) @map("payment_date") @db.Timestamp()
-    amount      Decimal   @db.Decimal(15, 2)
-    createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt   DateTime? @map("updated_at") @db.Timestamp()
-    loan        Loan      @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  id          Int       @id @unique @default(autoincrement())
+  loanId      Int       @map("loan_id")
+  paymentDate DateTime  @default(now()) @map("payment_date") @db.Timestamp()
+  amount      Decimal   @db.Decimal(15, 2)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt   DateTime? @map("updated_at") @db.Timestamp()
 
-    @@map("monthly_payment_loan")
+  //Prisma Client
+  loan Loan @relation(fields: [loanId], references: [id], onDelete: Cascade)
+
+  @@map("monthly_payment_loan")
 }

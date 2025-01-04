@@ -9,20 +9,22 @@ enum ReportStatus {
 
 
 enum TypePayment {
-    TIME_LESS
-    QUOTA_LESS
+  TIME_LESS
+  QUOTA_LESS
 
-    @@map("type_payment")
+  @@map("type_payment")
 }
+
 
 
 enum LoanStatus {
-    ACTIVE
-    PAID
-    ARCHIVED
+  ACTIVE
+  PAID
+  ARCHIVED
 
-    @@map("loan_status")
+  @@map("loan_status")
 }
+
 
 
 enum AuthType {

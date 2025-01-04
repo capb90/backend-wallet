@@ -5,35 +5,38 @@ import { Saving } from "saving"
 import { Income, Report, ReportAttachment, ReportExpense, ReportExpense, ReportExpenseComment, ReportIncome, ReportIncomeComment } from "report"
 
 model User {
-    id                   Int                    @id @unique @default(autoincrement())
-    fullName             String                 @map("full_name") @db.VarChar(256)
-    email                String                 @unique
-    verifyEmail          Boolean                @default(false) @map("verify_email")
-    password             String?
-    authProvider         AuthType               @default(LOCAL) @map("auth_provider")
-    authProviderId       String?                @map("auth_provider_id")
-    status               UserStatus             @default(ACTIVE)
-    lastLogin            DateTime?              @map("last_login") @db.Timestamp()
-    reports              Report[]               @relation("CreateReports")
-    updateReports        Report[]               @relation("UpdateReports")
-    sharedReports        SharedReport[]
-    notifications        Notification[]
-    expenses             Expense[]
-    reportExpenses       ReportExpense[]        @relation("CreateReportExpenses")
-    updateReportExpenses ReportExpense[]        @relation("UpdateReportExpenses")
-    reportIncomes        ReportIncome[]         @relation("CreateReportIncomes")
-    updateReportIncomes  ReportIncome[]         @relation("UpdateReportIncomes")
-    incomes              Income[]
-    loans                Loan[]
-    savings              Saving[]
-    expenseComments      ReportExpenseComment[]
-    incomeComments       ReportIncomeComment[]
-    uploadedAttachments  ReportAttachment[]
-    createdAt            DateTime               @default(now()) @map("created_at") @db.Timestamp()
-    updatedAt            DateTime?              @updatedAt @map("updated_at") @db.Timestamp()
+  id             Int        @id @unique @default(autoincrement())
+  fullName       String     @map("full_name") @db.VarChar(256)
+  email          String     @unique
+  verifyEmail    Boolean    @default(false) @map("verify_email")
+  password       String?
+  authProvider   AuthType   @default(LOCAL) @map("auth_provider")
+  authProviderId String?    @map("auth_provider_id")
+  status         UserStatus @default(ACTIVE)
+  lastLogin      DateTime?  @map("last_login") @db.Timestamp()
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime?  @updatedAt @map("updated_at") @db.Timestamp()
 
-    @@map("user")
+  //Prisma Client
+  notifications        Notification[]
+  reports              Report[]               @relation("CreateReports")
+  updateReports        Report[]               @relation("UpdateReports")
+  sharedReports        SharedReport[]
+  expenses             Expense[]
+  reportExpenses       ReportExpense[]        @relation("CreateReportExpenses")
+  updateReportExpenses ReportExpense[]        @relation("UpdateReportExpenses")
+  expenseComments      ReportExpenseComment[]
+  incomes              Income[]
+  reportIncomes        ReportIncome[]         @relation("CreateReportIncomes")
+  updateReportIncomes  ReportIncome[]         @relation("UpdateReportIncomes")
+  incomeComments       ReportIncomeComment[]
+  loans                Loan[]
+  savings              Saving[]
+  uploadedAttachments  ReportAttachment[]
+
+  @@map("user")
 }
+
 
 
 model Notification {
@@ -42,7 +45,9 @@ model Notification {
   userId    Int                @map("user_id")
   status    NotificationStatus @default(SENT)
   createdAt DateTime           @default(now()) @map("created_at") @db.Timestamp()
-  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  //Prisma Client
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notification")
 }
