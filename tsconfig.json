@@ -13,7 +13,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "@backend-wallet/env": ["src/config/envs.ts"],
+      "@backend-wallet/auth": ["modules/auth/src/index.ts"]
+    },
     "esModuleInterop": true
   },
   "files": [],
