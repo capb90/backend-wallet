@@ -1,0 +1,10 @@
+ServerError:
+  description: Error interno del servidor
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: Error interno del servidor

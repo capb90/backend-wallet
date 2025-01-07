@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import * as http from 'http';
 import { IOptionsServer } from '../interfaces';
+import { setupSwagger } from '../config';
 
 export class Server {
   public readonly app = express();
@@ -15,6 +16,7 @@ export class Server {
   private configure() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    setupSwagger(this.app);
   }
 
   public setRoutes(router: Router) {
