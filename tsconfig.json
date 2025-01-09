@@ -14,8 +14,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@backend-wallet/auth": ["modules/auth/src/index.ts"],
       "@backend-wallet/env": ["src/config/envs.ts"],
-      "@backend-wallet/auth": ["modules/auth/src/index.ts"]
+      "@backend-wallet/prisma-client": ["src/config/prisma-client.ts"],
+      "@backend-wallet/shared": ["modules/shared/src/index.ts"]
     },
     "esModuleInterop": true
   },

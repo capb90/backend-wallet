@@ -8,6 +8,10 @@ export class AuthRoutes {
       res.send({ message: 'Hello API from AUTH module' });
     });
 
+    router.get('/register', (req, res) => {
+      res.send({ message: 'Hello API from AUTH module' });
+    });
+
     return router;
   }
 }
