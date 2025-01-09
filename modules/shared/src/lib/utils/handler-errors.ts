@@ -1,16 +1,14 @@
 import { ZodIssue } from 'zod';
 import { IErrorResponse } from '../models';
 
-export class HandlerError extends Error implements IErrorResponse {
+export class HandlerError implements IErrorResponse {
   private constructor(
     public readonly code: number,
     public readonly message: string,
     public readonly errors?: ZodIssue[]
-  ) {
-    super(message);
-  }
+  ) {}
 
-  public static badRequest(message: string, errors: ZodIssue[]) {
+  public static badRequest(message: string, errors: ZodIssue[] = []) {
     return new HandlerError(400, message, errors);
   }
 
@@ -26,7 +24,8 @@ export class HandlerError extends Error implements IErrorResponse {
     return new HandlerError(404, message);
   }
 
-  public static internalServer() {
-    return new HandlerError(500, 'Error interno del servidor');
+  public static internalServer(message?: string) {
+    //TODO:MANAGE ERRORS
+    return new HandlerError(500, message || 'Error interno del servidor');
   }
 }

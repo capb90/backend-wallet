@@ -5,10 +5,10 @@ import {
 import { z } from 'zod';
 
 const registerSchema = z.object({
-  fullName: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
-  email: z.string().email('Debe ser un correo electrónico válido'),
+  fullName: z.string({message:'El nombre es requerido'}).min(3, 'El nombre debe tener al menos 3 caracteres'),
+  email: z.string({message:'El E-mail es requerido'}).email('Debe ser un correo electrónico válido'),
   password: z
-    .string()
+    .string({message:'El password es requerido'})
     .min(8, 'La contraseña debe tener al menos 8 caracteres')
     .regex(/[A-Z]/, 'La contraseña debe contener al menos una letra mayúscula')
     .regex(/\d/, 'La contraseña debe contener al menos un número'),

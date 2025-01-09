@@ -1,37 +1,17 @@
-export enum ReportStatus {
-  CREATED,
-  FINISHED,
-  CLOSED,
-  ARCHIVED,
-}
+import {
+  AttachmentEntity,
+  AuthType,
+  LoanStatus,
+  NotificationStatus,
+  ReportStatus,
+  TypePayment,
+  UserStatus,
+} from '@prisma/client';
 
-export enum TypePayment {
-  TIMELESS,
-  QUOTALESS,
-}
-
-export enum LoanStatus {
-  ACTIVE,
-  PAID,
-  ARCHIVED,
-}
-
-export enum AuthTypes {
-  LOCAL,
-  GOOGLE,
-}
-
-export enum UserStatus {
-  ACTIVE,
-  INACTIVE,
-}
-
-export enum AttachmentEntity {
-  EXPENSE,
-  INCOME,
-}
-
-export enum NotificationStatus {
-  SENT,
-  READ,
-}
+export const reportStatus = ReportStatus;
+export const typePayment = TypePayment;
+export const loanStatus = LoanStatus;
+export const authType = AuthType;
+export const userStatus = UserStatus;
+export const attachmentEntity = AttachmentEntity;
+export const notificationStatus = NotificationStatus;

@@ -1,16 +1,18 @@
 import { Router } from 'express';
+import { PrismaClientApp } from '@backend-wallet/prisma-client';
+import { AuthController } from './controllers/auth.controller';
+import { AuthDatasource, AuthRepository } from '../infrastructure';
 
 export class AuthRoutes {
   static get routes(): Router {
     const router = Router();
 
-    router.get('/login', (req, res) => {
-      res.send({ message: 'Hello API from AUTH module' });
-    });
+    const dataSource = new AuthDatasource(PrismaClientApp.getInstance());
+    const authRepository = new AuthRepository(dataSource);
 
-    router.get('/register', (req, res) => {
-      res.send({ message: 'Hello API from AUTH module' });
-    });
+    const authController = new AuthController(authRepository);
+
+    router.post('/register', authController.registerUser);
 
     return router;
   }

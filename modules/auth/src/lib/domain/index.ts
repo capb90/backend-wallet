@@ -1,1 +1,4 @@
-export * from './dtos'
+export * from './datasources/auth-model.datasource';
+export * from './dtos/register-user.dto';
+export * from './entities/user.entity';
+export * from './repositories/auth-model.repository';
