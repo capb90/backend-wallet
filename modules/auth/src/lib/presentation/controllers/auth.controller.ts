@@ -1,7 +1,11 @@
 import { HandlerError } from '@backend-wallet/shared';
 import { Request, Response } from 'express';
-import { RegisterUser } from '../../application';
-import { AuthRepositoryModel, RegisterUserDto } from '../../domain';
+import { LoginUser, RegisterUser } from '../../application';
+import {
+  AuthRepositoryModel,
+  LoginUserDto,
+  RegisterUserDto,
+} from '../../domain';
 
 export class AuthController {
   constructor(private readonly authRepository: AuthRepositoryModel) {}
@@ -22,6 +26,16 @@ export class AuthController {
 
     new RegisterUser(this.authRepository)
       .execute(registerUserDto)
+      .then((data) => res.json(data))
+      .catch((error) => this.handlerErrors(error, res));
+  };
+
+  public loginUser = (req: Request, res: Response) => {
+    const [error, loginUserDto] = LoginUserDto.create(req.body);
+    if (error) return res.status(error.code).json(error);
+
+    new LoginUser(this.authRepository)
+      .execute(loginUserDto)
       .then((data) => res.json(data))
       .catch((error) => this.handlerErrors(error, res));
   };

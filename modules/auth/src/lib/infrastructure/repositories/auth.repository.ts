@@ -1,8 +1,9 @@
 import {
   AuthDatasourceModel,
   AuthRepositoryModel,
+  LoginUserDto,
   RegisterUserDto,
-  UserEntity
+  UserEntity,
 } from '../../domain';
 
 export class AuthRepository implements AuthRepositoryModel {
@@ -10,5 +11,13 @@ export class AuthRepository implements AuthRepositoryModel {
 
   public register(registerDto: RegisterUserDto): Promise<UserEntity> {
     return this.authDataSource.register(registerDto);
+  }
+
+  public login(loginDto: LoginUserDto): Promise<UserEntity> {
+    return this.authDataSource.login(loginDto);
+  }
+
+  public updateLastLogin(lastLogin: Date, userId: number): Promise<void> {
+    return this.authDataSource.updateLastLogin(lastLogin,userId);
   }
 }

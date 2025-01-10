@@ -1,5 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { AuthDatasourceModel, RegisterUserDto, UserEntity } from '../../domain';
+import {
+  AuthDatasourceModel,
+  LoginUserDto,
+  RegisterUserDto,
+  UserEntity,
+} from '../../domain';
 import { HandlerError } from '@backend-wallet/shared';
 import { BcryptAdapter } from '../../config';
 import { UserMapper } from '../mappers/user.mapper';
@@ -17,7 +22,7 @@ export class AuthDatasource implements AuthDatasourceModel {
   public async register(registerDto: RegisterUserDto): Promise<UserEntity> {
     const { fullName, email, password } = registerDto;
     try {
-      const userExists = await this.prismaClient.user.findFirst({
+      const userExists = await this.prismaClient.user.findUnique({
         where: { email },
       });
 
@@ -36,6 +41,50 @@ export class AuthDatasource implements AuthDatasourceModel {
       });
 
       return UserMapper.userEntityFromObject(userCreated);
+    } catch (error) {
+      if (error instanceof HandlerError) {
+        throw error;
+      }
+      throw HandlerError.internalServer();
+    }
+  }
+
+  public async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    const { email, password } = loginUserDto;
+    try {
+      const userDB = await this.prismaClient.user.findUnique({
+        where: {
+          email,
+        },
+      });
+
+      if (!userDB) {
+        throw HandlerError.badRequest('Credenciales inválidas');
+      }
+
+      const isPasswordValid = this.comparePassword(password, userDB.password);
+
+      if (!isPasswordValid) {
+        throw HandlerError.badRequest('Credenciales inválidas');
+      }
+
+      return UserMapper.userEntityFromObject(userDB);
+    } catch (error) {
+      if (error instanceof HandlerError) {
+        throw error;
+      }
+      throw HandlerError.internalServer();
+    }
+  }
+
+  public async updateLastLogin(lastLogin: Date, userId: number): Promise<void> {
+    try {
+      await this.prismaClient.user.update({
+        where: { id: userId },
+        data: {
+          lastLogin,
+        },
+      });
     } catch (error) {
       if (error instanceof HandlerError) {
         throw error;

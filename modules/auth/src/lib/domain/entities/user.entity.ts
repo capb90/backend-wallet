@@ -1,4 +1,4 @@
-import { AuthType, UserStatus } from '@prisma/client';
+import { UserStatus } from '@prisma/client';
 
 export class UserEntity {
   constructor(
@@ -6,8 +6,6 @@ export class UserEntity {
     public fullName: string,
     public email: string,
     public verifyEmail: boolean,
-    public authProvider:AuthType,
-    public authProviderId: string | null,
     public status: UserStatus,
     public lastLogin: Date | null,
     public createdAt: Date,

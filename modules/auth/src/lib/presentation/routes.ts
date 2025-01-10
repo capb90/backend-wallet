@@ -9,10 +9,10 @@ export class AuthRoutes {
 
     const dataSource = new AuthDatasource(PrismaClientApp.getInstance());
     const authRepository = new AuthRepository(dataSource);
-
     const authController = new AuthController(authRepository);
 
     router.post('/register', authController.registerUser);
+    router.post('/login', authController.loginUser);
 
     return router;
   }
