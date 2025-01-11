@@ -70,7 +70,7 @@ model User {
   status      UserStatus @default(ACTIVE)
   lastLogin   DateTime?  @map("last_login") @db.Timestamp()
   createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt   DateTime?  @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt   DateTime?  @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   notifications        Notification[]
@@ -182,7 +182,7 @@ model Report {
   userId     Int          @map("user_id")
   updateById Int?         @map("update_by_id")
   createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt  DateTime?    @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt  DateTime?    @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   sharedReports  SharedReport[]
@@ -204,7 +204,7 @@ model ReportProperty {
   goalExpenses Decimal   @map("goal_expenses")
   goalIncome   Decimal?  @map("goal_income")
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt    DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
@@ -216,7 +216,7 @@ model Category {
   id        Int       @id @unique @default(autoincrement())
   name      String    @db.VarChar(256)
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   expenses          Expense[]
@@ -231,7 +231,7 @@ model SharedReport {
   reportId     Int       @map("report_id")
   permissionId Int       @map("permission_id")
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt    DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -247,7 +247,7 @@ model PermissionReport {
   id        Int       @id @unique @default(autoincrement())
   name      String    @unique @db.VarChar(256)
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   sharedReports SharedReport[]
@@ -264,7 +264,7 @@ model Expense {
   active      Boolean   @default(true)
   amount      Decimal   @db.Decimal(15, 2)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt   DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   reportExpenses ReportExpense[]
@@ -283,7 +283,7 @@ model Income {
   userId      Int       @map("user_id")
   active      Boolean   @default(true)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt   DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt   DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   reportIncomes ReportIncome[]
@@ -304,7 +304,7 @@ model ReportExpense {
   active          Boolean   @default(true)
   updateById      Int?      @map("update_by_id")
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt       DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt       DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   comments   ReportExpenseComment[]
@@ -338,7 +338,7 @@ model ReportExpenseComment {
   userId          Int       @map("user_id")
   parentCommentId Int?      @map("parent_comment_id")
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt       DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt       DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   user             User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -362,7 +362,7 @@ model ReportIncome {
   active         Boolean   @default(true)
   updateById     Int?      @map("update_by_id")
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt      DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt      DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   comments   ReportIncomeComment[]
@@ -382,7 +382,7 @@ model ReportIncomeComment {
   userId          Int       @map("user_id")
   parentCommentId Int?      @map("parent_comment_id")
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt       DateTime? @updatedAt @map("updated_at") @db.Timestamp()
+  updatedAt       DateTime? @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
