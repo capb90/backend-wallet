@@ -1,30 +1,20 @@
-import { BaseUseCase, HandlerError } from '@backend-wallet/shared';
-import { JwtAdapter } from '../../config';
+import { BaseUseCase } from '@backend-wallet/shared';
 import { AuthRepositoryModel, RegisterUserDto } from '../../domain';
-import { IApiAuthResponse } from '../models/auth.interfaces';
-
-type SignToken = (payload: object, duration?: string) => Promise<string | null>;
+import { IRegisterResponse } from '../models/auth.interfaces';
 
 export class RegisterUser
-  implements BaseUseCase<RegisterUserDto, IApiAuthResponse>
+  implements BaseUseCase<RegisterUserDto, IRegisterResponse>
 {
-  constructor(
-    private readonly authRepository: AuthRepositoryModel,
-    private readonly signToken: SignToken = JwtAdapter.generateToken
-  ) {}
+  constructor(private readonly authRepository: AuthRepositoryModel) {}
 
-  public async execute(dataDto: RegisterUserDto): Promise<IApiAuthResponse> {
+  public async execute(dataDto: RegisterUserDto): Promise<IRegisterResponse> {
     const user = await this.authRepository.register(dataDto);
 
-    const token = await this.signToken({id:user.id});
-
-    if(!token) throw HandlerError.internalServer('Error al generar el Token.');
-
-    this.authRepository.updateLastLogin(new Date(),user.id);
-
     return {
-      token,
-      user,
+      status: 'SUCCESS',
+      message: 'El usuario se registró exitosamente',
+      data: user,
+      statusCode: 201,
     };
   }
 }

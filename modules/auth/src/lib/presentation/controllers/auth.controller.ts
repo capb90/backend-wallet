@@ -26,7 +26,7 @@ export class AuthController {
 
     new RegisterUser(this.authRepository)
       .execute(registerUserDto)
-      .then((data) => res.json(data))
+      .then((data) => res.status(data.statusCode).json(data))
       .catch((error) => this.handlerErrors(error, res));
   };
 
@@ -39,4 +39,10 @@ export class AuthController {
       .then((data) => res.json(data))
       .catch((error) => this.handlerErrors(error, res));
   };
+
+  public sendCode = (req:Request,res:Response)=>{
+
+    
+    
+  }
 }

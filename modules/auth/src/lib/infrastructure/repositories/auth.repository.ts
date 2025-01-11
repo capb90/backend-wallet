@@ -9,6 +9,10 @@ import {
 export class AuthRepository implements AuthRepositoryModel {
   constructor(private readonly authDataSource: AuthDatasourceModel) {}
 
+  public validationUserByEmail(email: string): Promise<UserEntity> {
+    return this.authDataSource.validationUserByEmail(email);
+  }
+
   public register(registerDto: RegisterUserDto): Promise<UserEntity> {
     return this.authDataSource.register(registerDto);
   }

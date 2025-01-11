@@ -19,6 +19,13 @@ export class AuthDatasource implements AuthDatasourceModel {
     private readonly comparePassword: CompareFunction = BcryptAdapter.compare
   ) {}
 
+  private handleErrorDb(error: unknown) {
+    if (error instanceof HandlerError) {
+      throw error;
+    }
+    throw HandlerError.internalServer();
+  }
+
   public async register(registerDto: RegisterUserDto): Promise<UserEntity> {
     const { fullName, email, password } = registerDto;
     try {
@@ -42,10 +49,7 @@ export class AuthDatasource implements AuthDatasourceModel {
 
       return UserMapper.userEntityFromObject(userCreated);
     } catch (error) {
-      if (error instanceof HandlerError) {
-        throw error;
-      }
-      throw HandlerError.internalServer();
+      this.handleErrorDb(error);
     }
   }
 
@@ -70,10 +74,25 @@ export class AuthDatasource implements AuthDatasourceModel {
 
       return UserMapper.userEntityFromObject(userDB);
     } catch (error) {
-      if (error instanceof HandlerError) {
-        throw error;
+      this.handleErrorDb(error);
+    }
+  }
+
+  public async validationUserByEmail(email: string): Promise<UserEntity> {
+    try {
+      const userExists = await this.prismaClient.user.findUnique({
+        where: { email },
+      });
+
+      if (!userExists) {
+        throw HandlerError.badRequest(
+          `El E-mail ${email} no se encuentra registrado.`
+        );
       }
-      throw HandlerError.internalServer();
+
+      return UserMapper.userEntityFromObject(userExists);
+    } catch (error) {
+      this.handleErrorDb(error);
     }
   }
 
@@ -86,10 +105,7 @@ export class AuthDatasource implements AuthDatasourceModel {
         },
       });
     } catch (error) {
-      if (error instanceof HandlerError) {
-        throw error;
-      }
-      throw HandlerError.internalServer();
+      this.handleErrorDb(error);
     }
   }
 }
