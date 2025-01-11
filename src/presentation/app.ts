@@ -1,4 +1,4 @@
-import { envs } from '../config';
+import { envs, RedisClientApp } from '../config';
 import { AppRoutes } from './routes';
 import { Server } from './server';
 
@@ -7,6 +7,8 @@ export class App {
     const server = new Server({
       port: envs.PORT,
     });
+
+    new RedisClientApp();
 
     server.setRoutes(AppRoutes.routes);
 

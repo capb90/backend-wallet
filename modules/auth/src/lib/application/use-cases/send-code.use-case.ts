@@ -16,11 +16,7 @@ export class SendCode implements BaseUseCase<string, IApiResponse> {
     const code = generateVerificationCode();
     const expiresIn = 15 * 60;
 
-    await RedisClientApp.client.setEx(
-      `verification-${user.id}:${user.email}`,
-      expiresIn,
-      code
-    );
+    await RedisClientApp.set('verification-email', user.email, code, expiresIn);
 
     await transporterEmail.sendMail({
       to: user.email,

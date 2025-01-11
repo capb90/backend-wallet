@@ -1,18 +1,53 @@
-import { createClient, RedisClientType } from 'redis';
+import * as redis from 'redis';
+import { envs } from './envs';
 
 export class RedisClientApp {
-  private static _client: RedisClientType = createClient();
+  private static _client = redis.createClient({
+    url: envs.REDIS_URL
+  });
+
+  constructor() {
+    RedisClientApp._client.connect();
+  }
 
   public static get client() {
     return this._client;
   }
 
-  public static async connect() {
+  public static async get(cacheName: string, key: string) {
     try {
-      await this._client.connect();
+      const data = await RedisClientApp.client.json.get(`${cacheName}:${key}`);
+      return data;
     } catch (error) {
-      console.error('Redis connect error', error);
-      process.exit(1);
+      //TODO:log mange
+      console.error(`Error getting cache:${error}`);
+      return null;
+    }
+  }
+
+  public static async set(
+    cacheName: string,
+    key: string,
+    value: string,
+    expiresIn?: number
+  ) {
+    try {
+      const fullKey = `${cacheName}:${key}`;
+      await RedisClientApp.client.json.set(fullKey, '.', value);
+
+      if (expiresIn) {
+        await RedisClientApp.client.expire(fullKey, expiresIn);
+      }
+    } catch (error) {
+      console.error(`Error setting cache:${error}`);
+    }
+  }
+
+  public static async remove(cacheName: string, key: string) {
+    try {
+      await RedisClientApp.client.del(`${cacheName}:${key}`);
+    } catch (error) {
+      console.error(`Error deleting cache:${error}`);
     }
   }
 }

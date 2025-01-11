@@ -12,3 +12,10 @@ services:
       - ./postgres_db:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  redis:
+    image: redis:latest
+    container_name: redis-server-wallet
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis-data:/data

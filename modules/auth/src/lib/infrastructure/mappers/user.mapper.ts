@@ -28,8 +28,6 @@ export class UserMapper {
       validatedData.fullName,
       validatedData.email,
       validatedData.verifyEmail,
-      validatedData.authProvider,
-      validatedData.authProviderId,
       validatedData.status,
       validatedData.lastLogin,
       validatedData.createdAt,

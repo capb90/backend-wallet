@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import * as http from 'http';
-import { RedisClientApp, setupSwagger } from '../config';
+import { setupSwagger } from '../config';
 import { IOptionsServer } from '../interfaces';
 
 export class Server {
@@ -25,7 +25,6 @@ export class Server {
 
   public async start() {
     this.serverListener = this.app.listen(this.port, async () => {
-      await RedisClientApp.connect();
       console.log(`Server running on port ${this.port}`);
     });
   }
