@@ -1,10 +1,16 @@
 import { HandlerError } from '@backend-wallet/shared';
 import { Request, Response } from 'express';
-import { LoginUser, RegisterUser } from '../../application';
+import {
+  LoginUser,
+  RegisterUser,
+  SendCode,
+  VerifyEmail,
+} from '../../application';
 import {
   AuthRepositoryModel,
   LoginUserDto,
   RegisterUserDto,
+  VerifyEmailDto,
 } from '../../domain';
 
 export class AuthController {
@@ -40,9 +46,23 @@ export class AuthController {
       .catch((error) => this.handlerErrors(error, res));
   };
 
-  public sendCode = (req:Request,res:Response)=>{
+  public sendCode = (req: Request, res: Response) => {
+    const { email } = req.body;
 
-    
-    
-  }
+    new SendCode(this.authRepository)
+      .execute(email)
+      .then((data) => res.status(201).json(data))
+      .catch((error) => this.handlerErrors(error, res));
+  };
+
+  public verifyEmail = (req: Request, res: Response) => {
+    const [error, verifyEmailDto] = VerifyEmailDto.create(req.body);
+
+    if (error) return res.status(error.code).json(error);
+
+    new VerifyEmail(this.authRepository)
+      .execute(verifyEmailDto)
+      .then((data) => res.json(data))
+      .catch((error) => this.handlerErrors(error, res));
+  };
 }

@@ -16,7 +16,7 @@ export class RedisClientApp {
 
   public static async get(cacheName: string, key: string) {
     try {
-      const data = await RedisClientApp.client.json.get(`${cacheName}:${key}`);
+      const data = await RedisClientApp.client.get(`${cacheName}:${key}`);
       return data;
     } catch (error) {
       //TODO:log mange
@@ -33,7 +33,7 @@ export class RedisClientApp {
   ) {
     try {
       const fullKey = `${cacheName}:${key}`;
-      await RedisClientApp.client.json.set(fullKey, '.', value);
+      await RedisClientApp.client.set(fullKey, value);
 
       if (expiresIn) {
         await RedisClientApp.client.expire(fullKey, expiresIn);

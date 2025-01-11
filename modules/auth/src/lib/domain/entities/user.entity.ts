@@ -7,6 +7,7 @@ export class UserEntity {
     public email: string,
     public verifyEmail: boolean,
     public status: UserStatus,
+    public image:string | null,
     public lastLogin: Date | null,
     public createdAt: Date,
     public updatedAt: Date | null

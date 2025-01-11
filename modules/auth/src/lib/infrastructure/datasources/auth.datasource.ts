@@ -34,7 +34,7 @@ export class AuthDatasource implements AuthDatasourceModel {
       });
 
       if (userExists) {
-        throw HandlerError.badRequest(
+        throw HandlerError.notFound(
           `El usuario con el correo ${email} ya se encuentra registrado.`
         );
       }
@@ -85,12 +85,25 @@ export class AuthDatasource implements AuthDatasourceModel {
       });
 
       if (!userExists) {
-        throw HandlerError.badRequest(
+        throw HandlerError.notFound(
           `El E-mail ${email} no se encuentra registrado.`
         );
       }
 
       return UserMapper.userEntityFromObject(userExists);
+    } catch (error) {
+      this.handleErrorDb(error);
+    }
+  }
+
+  public async validationEmail(userId: number): Promise<void> {
+    try {
+      await this.prismaClient.user.update({
+        where: { id: userId },
+        data: {
+          verifyEmail: true,
+        },
+      });
     } catch (error) {
       this.handleErrorDb(error);
     }
