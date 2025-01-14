@@ -6,9 +6,9 @@ export abstract class AuthRepositoryModel {
   public abstract register(registerDto: RegisterUserDto): Promise<UserEntity>;
   public abstract login(loginDto: LoginUserDto): Promise<UserEntity>;
   public abstract validationUserByEmail(email: string): Promise<UserEntity>;
-  public abstract validationEmail(userId: number): Promise<void>;
+  public abstract validationEmail(userId: string): Promise<void>;
   public abstract updateLastLogin(
     lastLogin: Date,
-    userId: number
+    userId: string
   ): Promise<void>;
 }

@@ -2,14 +2,15 @@ import {
   userStatus,
   validationAdapter
 } from '@backend-wallet/shared';
-import { number, z } from 'zod';
+import { z } from 'zod';
 import { UserEntity } from '../../domain';
 
 const userEntitySchema = z.object({
-  id: number({ message: 'Id omitido en base de datos' }),
-  fullName: z.string({ message: 'Nombre completo omitido en base de datos' }),
+  id: z.string({ message: 'Id omitido en base de datos' }),
+  name: z.string({ message: 'Nombre completo omitido en base de datos' }),
   email: z.string({ message: 'email omitido en base de datos' }),
   verifyEmail: z.boolean(),
+  emailVerified:z.date().nullable(),
   image:z.string().nullable(),
   status: z.nativeEnum(userStatus),
   lastLogin: z.date().nullable(),
@@ -23,9 +24,10 @@ export class UserMapper {
 
     return new UserEntity(
       validatedData.id,
-      validatedData.fullName,
+      validatedData.name,
       validatedData.email,
       validatedData.verifyEmail,
+      validatedData.emailVerified,
       validatedData.status,
       validatedData.image,
       validatedData.lastLogin,

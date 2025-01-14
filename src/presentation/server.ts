@@ -14,6 +14,7 @@ export class Server {
   }
 
   private configure() {
+    this.app.set('trust proxy',true);
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     setupSwagger(this.app);

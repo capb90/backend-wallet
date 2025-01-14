@@ -61,16 +61,17 @@ enum NotificationStatus {
 
 //User model
 model User {
-  id          Int        @id @unique @default(autoincrement())
-  fullName    String     @map("full_name") @db.VarChar(256)
-  email       String     @unique
-  verifyEmail Boolean    @default(false) @map("verify_email")
-  password    String?
-  image       String?
-  status      UserStatus @default(ACTIVE)
-  lastLogin   DateTime?  @map("last_login") @db.Timestamp()
-  createdAt   DateTime   @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt   DateTime?  @map("updated_at") @db.Timestamp()
+  id            String     @id @unique @default(cuid())
+  name          String?
+  email         String     @unique
+  emailVerified DateTime?
+  image         String?
+  verifyEmail   Boolean    @default(false) @map("verify_email")
+  password      String?
+  status        UserStatus @default(ACTIVE)
+  lastLogin     DateTime?  @map("last_login") @db.Timestamp()
+  createdAt     DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt     DateTime?  @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   notifications        Notification[]
@@ -97,17 +98,17 @@ model User {
 
 //Auth Js schemas required
 model Account {
-  userId            Int       @map("user_id")
+  userId            String    @map("user_id")
   type              String
   provider          String
   providerAccountId String    @map("provider_account_id")
-  refreshToken      String?   @map("refresh_token")
-  accessToken       String?   @map("access_token")
-  expiresAt         Int?      @map("expires_at")
-  tokenType         String?   @map("token_type")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
   scope             String?
-  idToken           String?   @map("id_token")
-  sessionState      String?   @map("session_state")
+  id_token          String?
+  session_state     String?
   createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamp()
   updatedAt         DateTime? @updatedAt @map("updated_at") @db.Timestamp()
 
@@ -120,7 +121,7 @@ model Account {
 
 model Session {
   sessionToken String    @unique @map("session_token")
-  userId       Int       @map("user_id")
+  userId       String    @map("user_id")
   expires      DateTime
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp()
   updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamp()
@@ -142,7 +143,7 @@ model VerificationToken {
 
 model Authenticator {
   credentialID         String  @unique @map("credential_id")
-  userId               Int     @map("user_id")
+  userId               String  @map("user_id")
   providerAccountId    String  @map("provider_account_id")
   credentialPublicKey  String  @map("credential_public_key")
   counter              Int
@@ -162,7 +163,7 @@ model Authenticator {
 model Notification {
   id        Int                @id @unique @default(autoincrement())
   message   String
-  userId    Int                @map("user_id")
+  userId    String             @map("user_id")
   status    NotificationStatus @default(SENT)
   createdAt DateTime           @default(now()) @map("created_at") @db.Timestamp()
 
@@ -179,8 +180,8 @@ model Report {
   startDate  DateTime     @default(now()) @map("start_date") @db.Date
   finishDate DateTime?    @map("finish_date") @db.Date
   status     ReportStatus @default(CREATED)
-  userId     Int          @map("user_id")
-  updateById Int?         @map("update_by_id")
+  userId     String       @map("user_id")
+  updateById String?      @map("update_by_id")
   createdAt  DateTime     @default(now()) @map("created_at") @db.Timestamp()
   updatedAt  DateTime?    @map("updated_at") @db.Timestamp()
 
@@ -227,7 +228,7 @@ model Category {
 
 model SharedReport {
   id           Int       @id @unique @default(autoincrement())
-  userId       Int       @map("user_id")
+  userId       String    @map("user_id")
   reportId     Int       @map("report_id")
   permissionId Int       @map("permission_id")
   createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp()
@@ -259,7 +260,7 @@ model Expense {
   id          Int       @id @unique @default(autoincrement())
   name        String    @db.VarChar(256)
   description String?
-  userId      Int       @map("user_id")
+  userId      String    @map("user_id")
   categoryId  Int?      @map("category_id")
   active      Boolean   @default(true)
   amount      Decimal   @db.Decimal(15, 2)
@@ -280,7 +281,7 @@ model Income {
   name        String    @db.VarChar(256)
   description String?
   amount      Decimal   @db.Decimal(15, 2)
-  userId      Int       @map("user_id")
+  userId      String    @map("user_id")
   active      Boolean   @default(true)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp()
   updatedAt   DateTime? @map("updated_at") @db.Timestamp()
@@ -300,9 +301,9 @@ model ReportExpense {
   nameExpense     String    @map("name_expense") @db.VarChar(256)
   expenseAmount   Decimal   @map("expense_amount") @db.Decimal(15, 2)
   parentExpenseId Int?      @map("parent_expense_id")
-  userId          Int       @map("user_id")
+  userId          String    @map("user_id")
   active          Boolean   @default(true)
-  updateById      Int?      @map("update_by_id")
+  updateById      String?   @map("update_by_id")
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
   updatedAt       DateTime? @map("updated_at") @db.Timestamp()
 
@@ -335,7 +336,7 @@ model ReportExpenseComment {
   id              Int       @id @unique @default(autoincrement())
   reportExpenseId Int       @map("report_expense_id")
   comment         String
-  userId          Int       @map("user_id")
+  userId          String    @map("user_id")
   parentCommentId Int?      @map("parent_comment_id")
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
   updatedAt       DateTime? @map("updated_at") @db.Timestamp()
@@ -357,10 +358,10 @@ model ReportIncome {
   nameIncome     String    @map("name_income") @db.VarChar(256)
   incomeAmount   Decimal   @map("income_amount") @db.Decimal(15, 2)
   parentIncomeId Int?      @map("parent_income_id")
-  userId         Int       @map("user_id")
+  userId         String    @map("user_id")
   description    String?
   active         Boolean   @default(true)
-  updateById     Int?      @map("update_by_id")
+  updateById     String?   @map("update_by_id")
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp()
   updatedAt      DateTime? @map("updated_at") @db.Timestamp()
 
@@ -379,7 +380,7 @@ model ReportIncomeComment {
   id              Int       @id @unique @default(autoincrement())
   reportIncomeId  Int       @map("report_income_id")
   comment         String
-  userId          Int       @map("user_id")
+  userId          String    @map("user_id")
   parentCommentId Int?      @map("parent_comment_id")
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp()
   updatedAt       DateTime? @map("updated_at") @db.Timestamp()
@@ -399,7 +400,7 @@ model ReportAttachment {
   reportId        Int              @map("report_id")
   url             String           @db.VarChar(512)
   name            String           @db.VarChar(256)
-  uploadedBy      Int              @map("uploaded_by")
+  uploadedBy      String           @map("uploaded_by")
   relatedEntity   AttachmentEntity @map("related_entity")
   relatedEntityId Int              @map("related_entity_id")
   createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamp()
@@ -415,7 +416,7 @@ model ReportAttachment {
 model Loan {
   id               Int        @id @unique @default(autoincrement())
   name             String     @db.VarChar(256)
-  userId           Int        @map("user_id")
+  userId           String     @map("user_id")
   amount           Decimal    @db.Decimal(15, 2)
   interestRate     Decimal    @map("interest_rate") @db.Decimal(5, 2)
   termMonths       Int        @map("term_months")
@@ -467,7 +468,7 @@ model MonthlyPaymentLoan {
 model Saving {
   id        Int       @id @unique @default(autoincrement())
   name      String    @db.VarChar(256)
-  userId    Int       @map("user_id")
+  userId    String    @map("user_id")
   goal      Decimal?  @db.Decimal(15, 2)
   amount    Decimal   @db.Decimal(15, 2)
   active    Boolean   @default(true)

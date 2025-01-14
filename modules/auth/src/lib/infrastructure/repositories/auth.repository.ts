@@ -9,7 +9,7 @@ import {
 export class AuthRepository implements AuthRepositoryModel {
   constructor(private readonly authDataSource: AuthDatasourceModel) {}
 
-  public validationEmail(userId: number): Promise<void> {
+  public validationEmail(userId: string): Promise<void> {
     return this.authDataSource.validationEmail(userId);
   }
 
@@ -25,7 +25,7 @@ export class AuthRepository implements AuthRepositoryModel {
     return this.authDataSource.login(loginDto);
   }
 
-  public updateLastLogin(lastLogin: Date, userId: number): Promise<void> {
+  public updateLastLogin(lastLogin: Date, userId: string): Promise<void> {
     return this.authDataSource.updateLastLogin(lastLogin, userId);
   }
 }

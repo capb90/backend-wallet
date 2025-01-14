@@ -27,7 +27,7 @@ export class AuthDatasource implements AuthDatasourceModel {
   }
 
   public async register(registerDto: RegisterUserDto): Promise<UserEntity> {
-    const { fullName, email, password } = registerDto;
+    const { name, email, password } = registerDto;
     try {
       const userExists = await this.prismaClient.user.findUnique({
         where: { email },
@@ -41,7 +41,7 @@ export class AuthDatasource implements AuthDatasourceModel {
 
       const userCreated = await this.prismaClient.user.create({
         data: {
-          fullName,
+          name,
           email,
           password: this.hashPassword(password),
         },
@@ -96,12 +96,13 @@ export class AuthDatasource implements AuthDatasourceModel {
     }
   }
 
-  public async validationEmail(userId: number): Promise<void> {
+  public async validationEmail(userId: string): Promise<void> {
     try {
       await this.prismaClient.user.update({
         where: { id: userId },
         data: {
           verifyEmail: true,
+          emailVerified: new Date(),
         },
       });
     } catch (error) {
@@ -109,7 +110,7 @@ export class AuthDatasource implements AuthDatasourceModel {
     }
   }
 
-  public async updateLastLogin(lastLogin: Date, userId: number): Promise<void> {
+  public async updateLastLogin(lastLogin: Date, userId: string): Promise<void> {
     try {
       await this.prismaClient.user.update({
         where: { id: userId },

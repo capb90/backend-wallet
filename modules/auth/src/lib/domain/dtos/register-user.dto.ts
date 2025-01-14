@@ -5,7 +5,7 @@ import {
 import { z } from 'zod';
 
 const registerSchema = z.object({
-  fullName: z.string({message:'El nombre es requerido'}).min(3, 'El nombre debe tener al menos 3 caracteres'),
+  name: z.string({message:'El nombre es requerido'}).min(3, 'El nombre debe tener al menos 3 caracteres'),
   email: z.string({message:'El E-mail es requerido'}).email('Debe ser un correo electrónico válido'),
   password: z
     .string({message:'El password es requerido'})
@@ -16,7 +16,7 @@ const registerSchema = z.object({
 
 export class RegisterUserDto {
   private constructor(
-    public fullName: string,
+    public name: string,
     public email: string,
     public password: string
   ) {}
@@ -25,18 +25,12 @@ export class RegisterUserDto {
     object: Record<string, unknown>
   ): [HandlerError?, RegisterUserDto?] {
     try {
-      const { fullName, email, password, authProvider } = object;
-      const validatedData = validationAdapter.validate(registerSchema, {
-        fullName,
-        email,
-        password,
-        authProvider,
-      });
+      const validatedData = validationAdapter.validate(registerSchema, object);
 
       return [
         null,
         new RegisterUserDto(
-          validatedData.fullName,
+          validatedData.name,
           validatedData.email,
           validatedData.password
         ),
