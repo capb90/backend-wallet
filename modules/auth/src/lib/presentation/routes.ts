@@ -11,6 +11,7 @@ export class AuthRoutes {
     const authRepository = new AuthRepository(dataSource);
     const authController = new AuthController(authRepository);
 
+    router.post('/callback/google',authController.googleSignIn)
     router.post('/register', authController.registerUser);
     router.post('/login', authController.loginUser);
     router.post('/send-code', authController.sendCode);

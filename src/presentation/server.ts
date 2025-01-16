@@ -2,6 +2,8 @@ import express, { Router } from 'express';
 import * as http from 'http';
 import { setupSwagger } from '../config';
 import { IOptionsServer } from '../interfaces';
+import cors from 'cors';
+
 
 export class Server {
   private serverListener?: http.Server;
@@ -14,8 +16,8 @@ export class Server {
   }
 
   private configure() {
-    this.app.set('trust proxy',true);
     this.app.use(express.json());
+    this.app.use(cors({origin:'http://localhost:5173', credentials:true}))
     this.app.use(express.urlencoded({ extended: true }));
     setupSwagger(this.app);
   }

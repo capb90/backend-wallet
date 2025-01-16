@@ -61,17 +61,19 @@ enum NotificationStatus {
 
 //User model
 model User {
-  id            String     @id @unique @default(cuid())
-  name          String?
-  email         String     @unique
-  emailVerified DateTime?
-  image         String?
-  verifyEmail   Boolean    @default(false) @map("verify_email")
-  password      String?
-  status        UserStatus @default(ACTIVE)
-  lastLogin     DateTime?  @map("last_login") @db.Timestamp()
-  createdAt     DateTime   @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt     DateTime?  @map("updated_at") @db.Timestamp()
+  id             String     @id @unique @default(cuid())
+  name           String?
+  email          String     @unique
+  emailVerified  DateTime?
+  image          String?
+  verifyEmail    Boolean    @default(false) @map("verify_email")
+  password       String?
+  authProvider   AuthType   @default(LOCAL) @map("auth_type")
+  authProviderId String?    @unique
+  status         UserStatus @default(ACTIVE)
+  lastLogin      DateTime?  @map("last_login") @db.Timestamp()
+  createdAt      DateTime   @default(now()) @map("created_at") @db.Timestamp()
+  updatedAt      DateTime?  @map("updated_at") @db.Timestamp()
 
   //Prisma Client
   notifications        Notification[]
@@ -89,76 +91,9 @@ model User {
   loans                Loan[]
   savings              Saving[]
   uploadedAttachments  ReportAttachment[]
-  accounts             Account[]
-  sessions             Session[]
-  Authenticator        Authenticator[]
 
   @@map("user")
 }
-
-//Auth Js schemas required
-model Account {
-  userId            String    @map("user_id")
-  type              String
-  provider          String
-  providerAccountId String    @map("provider_account_id")
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt         DateTime? @updatedAt @map("updated_at") @db.Timestamp()
-
-  //Prisma Client
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([provider, providerAccountId])
-  @@map("account")
-}
-
-model Session {
-  sessionToken String    @unique @map("session_token")
-  userId       String    @map("user_id")
-  expires      DateTime
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamp()
-  updatedAt    DateTime? @updatedAt @map("updated_at") @db.Timestamp()
-
-  //Prisma Client
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("session")
-}
-
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
-
-  @@id([identifier, token])
-  @@map("verification_token")
-}
-
-model Authenticator {
-  credentialID         String  @unique @map("credential_id")
-  userId               String  @map("user_id")
-  providerAccountId    String  @map("provider_account_id")
-  credentialPublicKey  String  @map("credential_public_key")
-  counter              Int
-  credentialDeviceType String  @map("credential_device_type")
-  credentialBackedUp   Boolean @map("credential_backed_up")
-  transports           String?
-
-  //Prisma Client
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([userId, credentialID])
-  @@map("authenticator")
-}
-
-//End Auth Js schemas required
 
 model Notification {
   id        Int                @id @unique @default(autoincrement())
