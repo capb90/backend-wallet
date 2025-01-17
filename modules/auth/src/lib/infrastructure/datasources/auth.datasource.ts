@@ -8,6 +8,7 @@ import {
 import { HandlerError } from '@backend-wallet/shared';
 import { BcryptAdapter } from '../../config';
 import { UserMapper } from '../mappers/user.mapper';
+import { TokenPayload } from 'google-auth-library';
 
 type HashFunction = (password: string) => string;
 type CompareFunction = (password: string, hashed: string) => boolean;
@@ -73,6 +74,31 @@ export class AuthDatasource implements AuthDatasourceModel {
       }
 
       return UserMapper.userEntityFromObject(userDB);
+    } catch (error) {
+      this.handleErrorDb(error);
+    }
+  }
+
+  public async signInGoogle(payload: TokenPayload): Promise<UserEntity> {
+    try {
+      let user = await this.prismaClient.user.findUnique({
+        where: { email:payload.email },
+      });
+
+      if (!user) {
+        user = await this.prismaClient.user.create({
+          data: {
+            name: payload.name,
+            email: payload.email,
+            image:payload.picture,
+            verifyEmail:payload.email_verified,
+            authProvider: 'GOOGLE',
+            authProviderId: payload.sub,
+          },
+        });
+      }
+
+      return UserMapper.userEntityFromObject(user);
     } catch (error) {
       this.handleErrorDb(error);
     }

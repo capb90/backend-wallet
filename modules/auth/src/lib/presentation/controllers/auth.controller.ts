@@ -1,26 +1,18 @@
-import { envs } from '@backend-wallet/env';
-import { PrismaClientApp } from '@backend-wallet/prisma-client';
 import { HandlerError } from '@backend-wallet/shared';
 import { Request, Response } from 'express';
-import { OAuth2Client } from 'google-auth-library';
 import {
   LoginUser,
   RegisterUser,
   SendCode,
+  SignInGoogle,
   VerifyEmail,
 } from '../../application';
-import { JwtAdapter } from '../../config';
 import {
   AuthRepositoryModel,
   LoginUserDto,
   RegisterUserDto,
   VerifyEmailDto,
 } from '../../domain';
-
-
-const prisma = PrismaClientApp.getInstance();
-
-const client = new OAuth2Client(envs.AUTH_GOOGLE_ID);
 
 
 export class AuthController {
@@ -79,59 +71,17 @@ export class AuthController {
   public googleSignIn = async (req: Request, res: Response) => {
     const { credential } = req.body;
 
-
     if (!credential) {
       return res
         .status(400)
-        .json(HandlerError.badRequest('Authorization code is required'));
+        .json(
+          HandlerError.badRequest('El código de autorización es requerido.')
+        );
     }
 
-    try {
-      const ticket = await client.verifyIdToken({
-        idToken:credential,
-        audience:envs.AUTH_GOOGLE_ID
-      })
-
-      const payload = ticket.getPayload();
-
-      if (!payload) {
-        throw new Error('No se pudo obtener información del token');
-      }
-
-
-      let user = await prisma.user.findUnique({
-        where: { email: payload.email },
-      });
-
-      if (!user) {
-        user = await prisma.user.create({
-          data: {
-            name: payload.name,
-            email: payload.email,
-            authProvider:'GOOGLE',
-            authProviderId:payload.sub
-          },
-        });
-      }
-
-      const token = await JwtAdapter.generateToken({ id: user.id });
-
-      res.json({
-        status: 'SUCCESS',
-        message: 'Usuario validado correctamente',
-        data: {
-          token,
-          user,
-        },
-        statusCode: 200,
-      });
-    } catch (error) {
-      console.error(
-        'Error during Google callback:',
-        error.response?.data || error.message
-      );
-
-      res.status(500).json({ error: 'Failed to authenticate with Google' });
-    }
+    new SignInGoogle(this.authRepository)
+      .execute(credential)
+      .then((data) => res.status(201).json(data))
+      .catch((error) => this.handlerErrors(error, res));
   };
 }

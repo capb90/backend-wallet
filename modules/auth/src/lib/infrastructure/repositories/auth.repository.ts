@@ -1,3 +1,4 @@
+import { TokenPayload } from 'google-auth-library';
 import {
   AuthDatasourceModel,
   AuthRepositoryModel,
@@ -8,6 +9,10 @@ import {
 
 export class AuthRepository implements AuthRepositoryModel {
   constructor(private readonly authDataSource: AuthDatasourceModel) {}
+
+  public signInGoogle(payload: TokenPayload): Promise<UserEntity> {
+    return this.authDataSource.signInGoogle(payload);
+  }
 
   public validationEmail(userId: string): Promise<void> {
     return this.authDataSource.validationEmail(userId);

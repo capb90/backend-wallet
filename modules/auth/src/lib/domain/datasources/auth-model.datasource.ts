@@ -1,3 +1,4 @@
+import { TokenPayload } from 'google-auth-library';
 import { LoginUserDto, RegisterUserDto } from '..';
 import { UserEntity } from '../entities/user.entity';
 
@@ -6,6 +7,7 @@ export abstract class AuthDatasourceModel {
   public abstract login(registerDto: LoginUserDto): Promise<UserEntity>;
   public abstract validationUserByEmail(email: string): Promise<UserEntity>;
   public abstract validationEmail(userId: string): Promise<void>;
+  public abstract signInGoogle(payload: TokenPayload): Promise<UserEntity>;
   public abstract updateLastLogin(
     lastLogin: Date,
     userId: string
