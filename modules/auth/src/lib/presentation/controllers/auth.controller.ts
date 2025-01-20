@@ -81,7 +81,7 @@ export class AuthController {
 
     new SignInGoogle(this.authRepository)
       .execute(credential)
-      .then((data) => res.status(201).json(data))
+      .then((data) => res.status(data.statusCode).json(data))
       .catch((error) => this.handlerErrors(error, res));
   };
 }

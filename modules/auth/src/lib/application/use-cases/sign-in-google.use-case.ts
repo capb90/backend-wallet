@@ -17,32 +17,41 @@ export class SignInGoogle implements BaseUseCase<string, ILoginResponse> {
   ) {}
 
   public async execute(credential: string): Promise<ILoginResponse> {
-    const ticket = await this.clientOAuth.verifyIdToken({
-      idToken: credential,
-      audience: envs.AUTH_GOOGLE_ID,
-    });
-
-    const payload = ticket.getPayload();
-    
-    if (!payload)
-      throw HandlerError.notFound('No se pudo obtener información del token');
-
-    const user = await this.authRepository.signInGoogle(payload);
-
-    const token = await this.signToken({ id: user.id });
-
-    if (!token) throw HandlerError.internalServer('Error al generar el Token.');
-
-    this.authRepository.updateLastLogin(new Date(), user.id);
-
-    return {
-      status: 'SUCCESS',
-      message: 'Usuario validado correctamente',
-      data: {
-        token,
-        user,
-      },
-      statusCode: 200,
-    };
+    try {
+      const ticket = await this.clientOAuth.verifyIdToken({
+        idToken: credential,
+        audience: envs.AUTH_GOOGLE_ID,
+      });
+  
+      const payload = ticket.getPayload();
+  
+      if (!payload)
+        throw HandlerError.notFound('No se pudo obtener información del token');
+  
+      const { user, action } = await this.authRepository.signInGoogle(payload);
+  
+      const token = await this.signToken({ id: user.id });
+  
+      if (!token) throw HandlerError.internalServer('Error al generar el Token.');
+  
+      this.authRepository.updateLastLogin(new Date(), user.id);
+  
+      return {
+        status: 'SUCCESS',
+        message: 'Usuario validado correctamente',
+        data: {
+          token,
+          user,
+        },
+        statusCode: action === 'CREATE' ? 201 : 200,
+      };
+    } catch (error) {
+      if(error instanceof HandlerError){
+        throw error;
+      }
+      throw HandlerError.badRequest("Error al validar las credenciales de Google");
+      
+    }
+   
   }
 }

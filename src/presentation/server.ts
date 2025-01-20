@@ -1,6 +1,5 @@
 import express, { Router } from 'express';
 import * as http from 'http';
-import { setupSwagger } from '../config';
 import { IOptionsServer } from '../interfaces';
 import cors from 'cors';
 
@@ -19,7 +18,6 @@ export class Server {
     this.app.use(express.json());
     this.app.use(cors({origin:'http://localhost:5173', credentials:true}))
     this.app.use(express.urlencoded({ extended: true }));
-    setupSwagger(this.app);
   }
 
   public setRoutes(router: Router) {

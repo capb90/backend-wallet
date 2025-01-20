@@ -79,8 +79,9 @@ export class AuthDatasource implements AuthDatasourceModel {
     }
   }
 
-  public async signInGoogle(payload: TokenPayload): Promise<UserEntity> {
+  public async signInGoogle(payload: TokenPayload): Promise<{user:UserEntity; action:'CREATE' | 'UPDATE'}> {
     try {
+      let action:'CREATE' | 'UPDATE' = 'UPDATE';
       let user = await this.prismaClient.user.findUnique({
         where: { email:payload.email },
       });
@@ -96,9 +97,11 @@ export class AuthDatasource implements AuthDatasourceModel {
             authProviderId: payload.sub,
           },
         });
+
+        action = 'CREATE';
       }
 
-      return UserMapper.userEntityFromObject(user);
+      return {user:UserMapper.userEntityFromObject(user), action};
     } catch (error) {
       this.handleErrorDb(error);
     }

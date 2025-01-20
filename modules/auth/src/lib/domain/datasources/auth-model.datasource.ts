@@ -7,7 +7,7 @@ export abstract class AuthDatasourceModel {
   public abstract login(registerDto: LoginUserDto): Promise<UserEntity>;
   public abstract validationUserByEmail(email: string): Promise<UserEntity>;
   public abstract validationEmail(userId: string): Promise<void>;
-  public abstract signInGoogle(payload: TokenPayload): Promise<UserEntity>;
+  public abstract signInGoogle(payload: TokenPayload): Promise<{user:UserEntity; action:'CREATE' | 'UPDATE'}>;
   public abstract updateLastLogin(
     lastLogin: Date,
     userId: string

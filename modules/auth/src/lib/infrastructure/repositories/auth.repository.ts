@@ -10,7 +10,7 @@ import {
 export class AuthRepository implements AuthRepositoryModel {
   constructor(private readonly authDataSource: AuthDatasourceModel) {}
 
-  public signInGoogle(payload: TokenPayload): Promise<UserEntity> {
+  public signInGoogle(payload: TokenPayload): Promise<{user:UserEntity; action:'CREATE' | 'UPDATE'}> {
     return this.authDataSource.signInGoogle(payload);
   }
 

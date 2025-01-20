@@ -7,9 +7,9 @@ const verifySchema = z.object({
     .email('Debe ser un correo electrónico válido'),
   code: z
     .string({ message: 'El código es requerido' })
-    .min(6, 'El código debe tener al menos 8 caracteres'),
+    .min(6, 'El código debe tener al menos 6 caracteres'),
 });
-
+ 
 export class VerifyEmailDto {
   constructor(public email: string, public code: string) {}
 
