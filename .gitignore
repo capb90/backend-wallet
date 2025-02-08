@@ -17,6 +17,7 @@ out-tsc
 # dependencies
 node_modules
 .env
+.env.test
 
 # IDEs and editors
 /.idea

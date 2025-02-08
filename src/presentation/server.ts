@@ -5,9 +5,13 @@ import cors from 'cors';
 
 
 export class Server {
-  private serverListener?: http.Server;
+  private _serverListener?: http.Server;
   private readonly port: number;
   public readonly app = express();
+
+  public get serverListener(){
+    return this._serverListener;
+  } 
 
   constructor(options: IOptionsServer) {
     this.port = options.port;
@@ -25,12 +29,12 @@ export class Server {
   }
 
   public async start() {
-    this.serverListener = this.app.listen(this.port, async () => {
+    this._serverListener = this.app.listen(this.port, async () => {
       console.log(`Server running on port ${this.port}`);
     });
   }
 
   public close() {
-    this.serverListener?.close();
+    this._serverListener?.close();
   }
 }

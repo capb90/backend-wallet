@@ -9,5 +9,6 @@ export const envs = {
   MAILER_SERVICE:get('MAILER_SERVICE').required().asString(),
   REDIS_URL:get('REDIS_URL').required().asString(),
   AUTH_GOOGLE_ID:get('AUTH_GOOGLE_ID').required().asString(),
-  AUTH_GOOGLE_SECRET:get('AUTH_GOOGLE_SECRET').required().asString()
+  AUTH_GOOGLE_SECRET:get('AUTH_GOOGLE_SECRET').required().asString(),
+  MODE:get('MODE').asString()
 };

@@ -6,6 +6,7 @@ export default {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   coverageDirectory: './coverage/backend-wallet',
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.[jt]s?(x)',
