@@ -33,7 +33,8 @@ export class SignInGoogle implements BaseUseCase<string, ILoginResponse> {
       const token = await this.signToken({ id: user.id });
   
       if (!token) throw HandlerError.internalServer('Error al generar el Token.');
-  
+
+      //TODO:REFACTOR
       this.authRepository.updateLastLogin(new Date(), user.id);
   
       return {

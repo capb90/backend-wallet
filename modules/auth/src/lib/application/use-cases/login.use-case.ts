@@ -18,7 +18,8 @@ export class LoginUser implements BaseUseCase<LoginUserDto, ILoginResponse> {
 
     if (!token) throw HandlerError.internalServer('Error al generar el Token.');
 
-    this.authRepository.updateLastLogin(new Date(), user.id);
+    //TODO:REFACTOR
+    await this.authRepository.updateLastLogin(new Date(), user.id);
 
     return {
       status: 'SUCCESS',
