@@ -86,4 +86,14 @@ describe('AuthDatasource', () => {
       methodResponse
     );
   });
+
+  test('Should throw error if the password is incorrect', async () => {
+    compareMock.mockReturnValue(false);
+    const error = HandlerError.badRequest('Credenciales inválidas');
+    mockCtx.prisma.user.findUnique.mockResolvedValue(userResponseDb);
+
+    await expect(authDatasource.login(userMockLogin)).rejects.toEqual(
+      error
+    );
+  });
 });
