@@ -13,10 +13,11 @@ import {
   RegisterUserDto,
   VerifyEmailDto,
 } from '../../domain';
+import { EventBus } from '../../infrastructure';
 
 
 export class AuthController {
-  constructor(private readonly authRepository: AuthRepositoryModel) {}
+  constructor(private readonly authRepository: AuthRepositoryModel, private readonly eventBus: EventBus) {}
 
   private handlerErrors(error: unknown, res: Response) {
     if (error instanceof HandlerError) {
@@ -42,7 +43,7 @@ export class AuthController {
     const [error, loginUserDto] = LoginUserDto.create(req.body);
     if (error) return res.status(error.code).json(error);
 
-    new LoginUser(this.authRepository)
+    new LoginUser(this.authRepository,this.eventBus)
       .execute(loginUserDto)
       .then((data) => res.json(data))
       .catch((error) => this.handlerErrors(error, res));

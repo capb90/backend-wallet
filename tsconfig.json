@@ -17,9 +17,12 @@
       "@backend-wallet/auth": ["modules/auth/src/index.ts"],
       "@backend-wallet/env": ["src/config/envs.ts"],
       "@backend-wallet/prisma-client": ["src/config/prisma-client.ts"],
-      "@backend-wallet/shared": ["modules/shared/src/index.ts"],
+      "@backend-wallet/prisma-context-mock": [
+        "src/config/prisma-mock-context.ts"
+      ],
       "@backend-wallet/redis-client": ["src/config/redis-client.ts"],
-      "@backend-wallet/prisma-context-mock": ["src/config/prisma-mock-context.ts"]
+      "@backend-wallet/shared": ["modules/shared/src/index.ts"],
+      "@backend-wallet/user": ["modules/user/src/index.ts"]
     },
     "esModuleInterop": true
   },

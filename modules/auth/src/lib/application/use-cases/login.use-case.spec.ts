@@ -1,5 +1,5 @@
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
-import { AuthRepository, UserMapper } from '../../infrastructure';
+import { AuthRepository, EventBus, UserMapper } from '../../infrastructure';
 import { LoginUser } from './login.use-case';
 import { authType, HandlerError, userStatus } from '@backend-wallet/shared';
 import { LoginUserDto } from '../../domain';
@@ -30,10 +30,12 @@ const signTokenMock = jest.fn();
 describe('LoginUser.use-case', () => {
   let loginUser: LoginUser;
   let AuthRepositoryMock: DeepMockProxy<AuthRepository>;
+  let EventBusMock: DeepMockProxy<EventBus>;
 
   beforeEach(() => {
     AuthRepositoryMock = mockDeep<AuthRepository>();
-    loginUser = new LoginUser(AuthRepositoryMock, signTokenMock);
+    EventBusMock = mockDeep<EventBus>();
+    loginUser = new LoginUser(AuthRepositoryMock,EventBusMock, signTokenMock);
   });
 
   beforeAll(() => {

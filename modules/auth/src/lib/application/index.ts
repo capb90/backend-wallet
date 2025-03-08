@@ -4,3 +4,4 @@ export * from './use-cases/login.use-case';
 export * from './use-cases/send-code.use-case';
 export * from './use-cases/verify-email.use-case';
 export * from './use-cases/sign-in-google.use-case';
+export * from './handlers/last-login.handler';

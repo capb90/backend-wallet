@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import { PrismaClientApp } from '@backend-wallet/prisma-client';
 import { AuthController } from './controllers/auth.controller';
-import { AuthDatasource, AuthRepository } from '../infrastructure';
+import { AuthDatasource, AuthRepository, EventBus } from '../infrastructure';
+import { LastLoginHandler } from '../application';
+import { UserLoggerEvent } from '../domain';
 
 export class AuthRoutes {
   static get routes(): Router {
@@ -10,8 +12,14 @@ export class AuthRoutes {
     const dataSource = new AuthDatasource(PrismaClientApp.getInstance());
     const authRepository = new AuthRepository(dataSource);
     const authController = new AuthController(authRepository);
+    const eventBus = new EventBus();
+    const lastLoginHandler = new LastLoginHandler(authRepository);
 
-    router.post('/callback/google',authController.googleSignIn)
+    eventBus.subscribe('UpdateLastLogin', (payload: UserLoggerEvent) => {
+      lastLoginHandler.handler(payload);
+    });
+
+    router.post('/callback/google', authController.googleSignIn);
     router.post('/register', authController.registerUser);
     router.post('/login', authController.loginUser);
     router.post('/send-code', authController.sendCode);
