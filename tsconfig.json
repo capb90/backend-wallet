@@ -19,7 +19,8 @@
       "@backend-wallet/prisma-client": ["src/config/prisma-client.ts"],
       "@backend-wallet/redis-client": ["src/config/redis-client.ts"],
       "@backend-wallet/shared": ["modules/shared/src/index.ts"],
-      "@backend-wallet/user": ["modules/user/src/index.ts"]
+      "@backend-wallet/user": ["modules/user/src/index.ts"],
+      "@backend-wallet/wss": ["src/config/wss-client.ts"]
     },
     "esModuleInterop": true
   },

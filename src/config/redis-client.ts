@@ -16,8 +16,7 @@ export class RedisClientApp {
 
   public static async get(cacheName: string, key: string) {
     try {
-      const data = await RedisClientApp.client.get(`${cacheName}:${key}`);
-      return data;
+      return await RedisClientApp.client.get(`${cacheName}:${key}`);
     } catch (error) {
       //TODO:log mange
       console.error(`Error getting cache:${error}`);

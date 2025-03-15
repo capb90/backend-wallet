@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import * as http from 'http';
 import { IOptionsServer } from '../interfaces';
 import cors from 'cors';
+import { envs } from '@backend-wallet/env';
 
 
 export class Server {

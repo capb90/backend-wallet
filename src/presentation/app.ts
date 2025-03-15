@@ -1,6 +1,8 @@
+import { createServer } from 'http';
 import { envs, RedisClientApp } from '../config';
 import { AppRoutes } from './routes';
 import { Server } from './server';
+import { WssClientApp } from '../config/wss-client';
 
 export class App {
   public static run() {
@@ -8,12 +10,16 @@ export class App {
       port: envs.PORT,
     });
 
-    console.log(`Running on ${envs.MODE}`);
+    const httpServer = createServer(server.app);
+    WssClientApp.initWssClient({server: httpServer});
 
     new RedisClientApp();
 
     server.setRoutes(AppRoutes.routes);
 
-    server.start();
+    httpServer.listen(envs.PORT, () => {
+      console.log(`Server running on port: ${ envs.PORT }`);
+      console.log(`Server mode ${envs.MODE}`);
+    })
   }
 }
