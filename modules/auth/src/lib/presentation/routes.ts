@@ -10,9 +10,9 @@ export class AuthRoutes {
     const router = Router();
 
     const dataSource = new AuthDatasource(PrismaClientApp.getInstance());
-    const authRepository = new AuthRepository(dataSource);
-    const authController = new AuthController(authRepository);
     const eventBus = new EventBus();
+    const authRepository = new AuthRepository(dataSource);
+    const authController = new AuthController(authRepository,eventBus);
     const lastLoginHandler = new LastLoginHandler(authRepository);
 
     eventBus.subscribe('UpdateLastLogin', (payload: UserLoggerEvent) => {

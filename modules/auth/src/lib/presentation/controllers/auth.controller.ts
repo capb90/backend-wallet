@@ -80,7 +80,7 @@ export class AuthController {
         );
     }
 
-    new SignInGoogle(this.authRepository)
+    new SignInGoogle(this.authRepository,this.eventBus)
       .execute(credential)
       .then((data) => res.status(data.statusCode).json(data))
       .catch((error) => this.handlerErrors(error, res));

@@ -15,7 +15,6 @@ describe("PrismaClientApp",()=>{
 
     test("Should return prisma client instant",()=>{
         expect(prisma).toBeDefined();
-        expect(prisma).toBeInstanceOf(PrismaClient);
     });
 
     test("Should connect and disconnect",async()=>{

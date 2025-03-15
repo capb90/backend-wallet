@@ -1,12 +1,23 @@
 import { AuthDatasource } from './auth.datasource';
-import {
-  Context,
-  CreateMockContext,
-  MockContext,
-} from '@backend-wallet/prisma-context-mock';
 import { LoginUserDto, RegisterUserDto } from '../../domain';
 import { authType, HandlerError, userStatus } from '@backend-wallet/shared';
 import { UserMapper } from '../mappers/user.mapper';
+import { PrismaClient } from '@prisma/client';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+
+type Context = {
+  prisma:PrismaClient
+}
+
+type MockContext = {
+  prisma:DeepMockProxy<PrismaClient>
+}
+
+const CreateMockContext = ():MockContext => {
+  return {
+    prisma:mockDeep<PrismaClient>()
+  }
+}
 
 const userResponseDb = {
   id: 'test1',

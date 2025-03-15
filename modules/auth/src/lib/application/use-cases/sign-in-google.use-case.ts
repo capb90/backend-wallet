@@ -1,15 +1,17 @@
 import { BaseUseCase, HandlerError } from '@backend-wallet/shared';
 import { ILoginResponse } from '../models/auth.interfaces';
-import { AuthRepositoryModel } from '../../domain';
+import { AuthRepositoryModel, UserLoggerEvent } from '../../domain';
 import { envs } from '@backend-wallet/env';
 import { JwtAdapter } from '../../config';
 import { OAuth2Client } from 'google-auth-library';
+import { EventBus } from '../../infrastructure';
 
 type SignToken = (payload: object, duration?: string) => Promise<string | null>;
 
 export class SignInGoogle implements BaseUseCase<string, ILoginResponse> {
   constructor(
     private readonly authRepository: AuthRepositoryModel,
+    private readonly eventBus: EventBus,
     private readonly signToken: SignToken = JwtAdapter.generateToken,
     private readonly clientOAuth: OAuth2Client = new OAuth2Client(
       envs.AUTH_GOOGLE_ID
@@ -34,8 +36,12 @@ export class SignInGoogle implements BaseUseCase<string, ILoginResponse> {
   
       if (!token) throw HandlerError.internalServer('Error al generar el Token.');
 
-      //TODO:REFACTOR
-      this.authRepository.updateLastLogin(new Date(), user.id);
+
+      this.eventBus.publish({
+        type:'UpdateLastLogin',
+        payload: new UserLoggerEvent(user.id,new Date())
+      })
+
   
       return {
         status: 'SUCCESS',

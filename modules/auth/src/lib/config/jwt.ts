@@ -1,12 +1,13 @@
-import jwt from 'jsonwebtoken';
+import jwt, { Secret } from 'jsonwebtoken';
 import { envs } from '@backend-wallet/env';
+import { StringValue } from 'ms';
 
-const JWT_SEED = envs.JWT_SEED;
+const JWT_SEED:Secret = envs.JWT_SEED;
 
 export class JwtAdapter {
   static async generateToken(
     payload: object,
-    duration = '72h'
+    duration:StringValue = '72h'
   ): Promise<string | null> {
     return new Promise((resolve) => {
       jwt.sign(payload, JWT_SEED, { expiresIn: duration }, (err, token) => {

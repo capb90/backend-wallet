@@ -8,6 +8,8 @@ export class App {
       port: envs.PORT,
     });
 
+    console.log(`Running on ${envs.MODE}`);
+
     new RedisClientApp();
 
     server.setRoutes(AppRoutes.routes);
