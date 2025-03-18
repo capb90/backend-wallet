@@ -4,13 +4,13 @@ import {
   AuthRepositoryModel,
   LoginUserDto,
   RegisterUserDto,
-  UserEntity,
+  AuthEntity,
 } from '../../domain';
 
 export class AuthRepository implements AuthRepositoryModel {
   constructor(private readonly authDataSource: AuthDatasourceModel) {}
 
-  public signInGoogle(payload: TokenPayload): Promise<{user:UserEntity; action:'CREATE' | 'UPDATE'}> {
+  public signInGoogle(payload: TokenPayload): Promise<{user:AuthEntity; action:'CREATE' | 'UPDATE'}> {
     return this.authDataSource.signInGoogle(payload);
   }
 
@@ -18,15 +18,15 @@ export class AuthRepository implements AuthRepositoryModel {
     return this.authDataSource.validationEmail(userId);
   }
 
-  public validationUserByEmail(email: string): Promise<UserEntity> {
+  public validationUserByEmail(email: string): Promise<AuthEntity> {
     return this.authDataSource.validationUserByEmail(email);
   }
 
-  public register(registerDto: RegisterUserDto): Promise<UserEntity> {
+  public register(registerDto: RegisterUserDto): Promise<AuthEntity> {
     return this.authDataSource.register(registerDto);
   }
 
-  public login(loginDto: LoginUserDto): Promise<UserEntity> {
+  public login(loginDto: LoginUserDto): Promise<AuthEntity> {
     return this.authDataSource.login(loginDto);
   }
 

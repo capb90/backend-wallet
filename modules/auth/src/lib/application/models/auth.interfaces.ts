@@ -1,10 +1,10 @@
-import { UserEntity } from '../../domain';
+import { AuthEntity } from '../../domain';
 import { IApiResponse } from '@backend-wallet/shared';
 
 export interface IUserToken {
   token: string;
-  user: UserEntity;
+  user: AuthEntity;
 }
 
-export type IRegisterResponse = IApiResponse<UserEntity>;
+export type IRegisterResponse = IApiResponse<AuthEntity>;
 export type ILoginResponse = IApiResponse<IUserToken>;

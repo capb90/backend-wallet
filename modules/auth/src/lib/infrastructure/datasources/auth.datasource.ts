@@ -3,7 +3,7 @@ import {
   AuthDatasourceModel,
   LoginUserDto,
   RegisterUserDto,
-  UserEntity,
+  AuthEntity,
 } from '../../domain';
 import { HandlerError } from '@backend-wallet/shared';
 import { BcryptAdapter } from '../../config';
@@ -27,7 +27,7 @@ export class AuthDatasource implements AuthDatasourceModel {
     throw HandlerError.internalServer();
   }
 
-  public async register(registerDto: RegisterUserDto): Promise<UserEntity> {
+  public async register(registerDto: RegisterUserDto): Promise<AuthEntity> {
     const { name, email, password } = registerDto;
     try {
       const userExists = await this.prismaClient.user.findUnique({
@@ -54,7 +54,7 @@ export class AuthDatasource implements AuthDatasourceModel {
     }
   }
 
-  public async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
+  public async login(loginUserDto: LoginUserDto): Promise<AuthEntity> {
     const { email, password } = loginUserDto;
     try {
       const userDB = await this.prismaClient.user.findUnique({
@@ -79,7 +79,7 @@ export class AuthDatasource implements AuthDatasourceModel {
     }
   }
 
-  public async signInGoogle(payload: TokenPayload): Promise<{user:UserEntity; action:'CREATE' | 'UPDATE'}> {
+  public async signInGoogle(payload: TokenPayload): Promise<{user:AuthEntity; action:'CREATE' | 'UPDATE'}> {
     try {
       let action:'CREATE' | 'UPDATE' = 'UPDATE';
       let user = await this.prismaClient.user.findUnique({
@@ -107,7 +107,7 @@ export class AuthDatasource implements AuthDatasourceModel {
     }
   }
 
-  public async validationUserByEmail(email: string): Promise<UserEntity> {
+  public async validationUserByEmail(email: string): Promise<AuthEntity> {
     try {
       const userExists = await this.prismaClient.user.findUnique({
         where: { email },

@@ -4,17 +4,6 @@
   "sourceRoot": "modules/user/src",
   "projectType": "library",
   "tags": [],
-  "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/modules/user",
-        "tsConfig": "modules/user/tsconfig.lib.json",
-        "packageJson": "modules/user/package.json",
-        "main": "modules/user/src/index.ts",
-        "assets": ["modules/user/*.md"]
-      }
-    }
-  }
+  "// targets": "to see all targets run: nx show project auth --web",
+  "targets": {}
 }
