@@ -48,14 +48,10 @@ describe('LoginUser.use-case', () => {
     signTokenMock.mockImplementation(() => Promise.resolve(tokenMock));
     const userEntity = UserMapper.userEntityFromObject(userResponseDb);
     AuthRepositoryMock.login.mockResolvedValue(userEntity);
+
     const response = {
-      status: 'SUCCESS',
-      message: 'Usuario validado correctamente',
-      data: {
-        token: tokenMock,
-        user: userEntity,
-      },
-      statusCode: 200,
+      token: tokenMock,
+      user: userEntity,
     };
 
     await expect(loginUser.execute(userMockLogin)).resolves.toEqual(response);

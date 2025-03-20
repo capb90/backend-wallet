@@ -1,4 +1,4 @@
-import { HandlerError } from '@backend-wallet/shared';
+import { BaseController, HandlerError } from '@backend-wallet/shared';
 import { Request, Response } from 'express';
 import {
   LoginUser,
@@ -16,16 +16,9 @@ import {
 import { EventBus } from '../../infrastructure';
 
 
-export class AuthController {
-  constructor(private readonly authRepository: AuthRepositoryModel, private readonly eventBus: EventBus) {}
-
-  private handlerErrors(error: unknown, res: Response) {
-    if (error instanceof HandlerError) {
-      return res.status(error.code).json(error);
-    }
-
-    const errorServer = HandlerError.internalServer();
-    return res.status(errorServer.code).json(errorServer);
+export class AuthController extends BaseController{
+  constructor(private readonly authRepository: AuthRepositoryModel, private readonly eventBus: EventBus) {
+    super();
   }
 
   public registerUser = (req: Request, res: Response) => {
@@ -35,7 +28,7 @@ export class AuthController {
 
     new RegisterUser(this.authRepository)
       .execute(registerUserDto)
-      .then((data) => res.status(data.statusCode).json(data))
+      .then((data) => res.status(201).json(data))
       .catch((error) => this.handlerErrors(error, res));
   };
 
@@ -45,7 +38,7 @@ export class AuthController {
 
     new LoginUser(this.authRepository,this.eventBus)
       .execute(loginUserDto)
-      .then((data) => res.json(data))
+      .then((data) => res.status(200).json(data))
       .catch((error) => this.handlerErrors(error, res));
   };
 
@@ -54,7 +47,7 @@ export class AuthController {
 
     new SendCode(this.authRepository)
       .execute(email)
-      .then((data) => res.status(201).json(data))
+      .then((data) => res.status(200).json(data))
       .catch((error) => this.handlerErrors(error, res));
   };
 
@@ -82,7 +75,7 @@ export class AuthController {
 
     new SignInGoogle(this.authRepository,this.eventBus)
       .execute(credential)
-      .then((data) => res.status(data.statusCode).json(data))
+      .then((payload) => res.status(payload.statusCode).json(payload.data))
       .catch((error) => this.handlerErrors(error, res));
   };
 }

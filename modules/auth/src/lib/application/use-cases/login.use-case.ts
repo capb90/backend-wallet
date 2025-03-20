@@ -1,16 +1,18 @@
 import { BaseUseCase, HandlerError } from '@backend-wallet/shared';
-import { AuthRepositoryModel, LoginUserDto, UserLoggerEvent } from '../../domain';
-import { JwtAdapter } from '../../config';
+import {
+  AuthRepositoryModel,
+  LoginUserDto,
+  UserLoggerEvent,
+} from '../../domain';
+import { JwtAdapter, SignToken } from '../../config';
 import { ILoginResponse } from '../models/auth.interfaces';
 import { EventBus } from '../../infrastructure';
-
-type SignToken = (payload: object, duration?: string) => Promise<string | null>;
 
 export class LoginUser implements BaseUseCase<LoginUserDto, ILoginResponse> {
   constructor(
     private readonly authRepository: AuthRepositoryModel,
     private readonly eventBus: EventBus,
-    private readonly signToken: SignToken = JwtAdapter.generateToken,
+    private readonly signToken: SignToken = JwtAdapter.generateToken
   ) {}
 
   public async execute(dataDto: LoginUserDto): Promise<ILoginResponse> {
@@ -20,21 +22,14 @@ export class LoginUser implements BaseUseCase<LoginUserDto, ILoginResponse> {
 
     if (!token) throw HandlerError.internalServer('Error al generar el Token.');
 
-
     this.eventBus.publish({
-      type:'UpdateLastLogin',
-      payload: new UserLoggerEvent(user.id,new Date())
-    })
-
+      type: 'UpdateLastLogin',
+      payload: new UserLoggerEvent(user.id, new Date()),
+    });
 
     return {
-      status: 'SUCCESS',
-      message: 'Usuario validado correctamente',
-      data: {
-        token,
-        user,
-      },
-      statusCode: 200,
+      token,
+      user,
     };
   }
 }

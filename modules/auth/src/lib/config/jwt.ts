@@ -2,6 +2,8 @@ import jwt, { Secret } from 'jsonwebtoken';
 import { envs } from '@backend-wallet/env';
 import { StringValue } from 'ms';
 
+export type SignToken = (payload: object, duration?: string) => Promise<string | null>;
+export type verifyToken = <T>(token: string) => Promise<T | null>;
 const JWT_SEED:Secret = envs.JWT_SEED;
 
 export class JwtAdapter {
