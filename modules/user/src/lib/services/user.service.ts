@@ -9,7 +9,8 @@ export class UserService {
     private readonly verifyToken: verifyToken = JwtAdapter.validateToken
   ) {}
 
-  public async detailByToken(token: string | null): Promise<UserEntity> {
+  public async detailByToken(authorization: string | null): Promise<UserEntity> {
+    const token = authorization.split(' ')[1];
     if (!token) {
       throw HandlerError.unauthorized('Usuario no autorizado');
     }
@@ -17,7 +18,7 @@ export class UserService {
     const tokenBody = await this.verifyToken<{ id: string }>(token);
 
     if (!tokenBody) {
-      throw HandlerError.internalServer('Error al verificar el token');
+      throw HandlerError.badRequest('Error al verificar el token');
     }
 
     return await this.repository.findUserById(tokenBody.id);
